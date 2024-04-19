@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include filename="$(find mobile_base)/urdf/hesai_lidar/lidar.gazebo.xacro" />
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+    <xacro:macro name="pandar_XT32M2X" params="*origin parent:=base_link name:=pandar topic_points:=/pandar/points hz:=10 gpu:=true">
+    
+    <joint name="${name}_frame_joint" type="fixed">
+        <xacro:insert_block name="origin" /> 
+        <parent link="${parent}"/>
+        <child link="${name}_link"/>
+    </joint>
+
+    <link name="${name}_link">
+        <inertial>
+            <mass value="0.49"/>
+            <origin xyz="0 0 0.0365" rpy="0 0 0" />
+            <inertia ixx="0.000241148" ixy="0" ixz="0" iyy="0.000241148" iyz="0" izz="0.000264"/>
+        </inertial>
+        <collision name="base_collision">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <cylinder radius="0.05" length="0.076"/>
+            </geometry>
+        </collision>
+        <visual name="base_visual">
+            <origin xyz="0 0 0.0" rpy="0 0 0" />
+            <geometry>
+                <cylinder radius="0.05" length="0.076"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <xacro:if value="${hz == 5}">
+    <xacro:property name="samples" value="4000" />
+    </xacro:if>
+    <xacro:if value="${hz == 10}">
+    <xacro:property name="samples" value="2000" />
+    </xacro:if>
+    <xacro:if value="${hz == 20}">
+    <xacro:property name="samples" value="1000" />
+    </xacro:if>
+
+    <xacro:gazebo_lidar name="${name}" topic_points="${topic_points}" hz="${hz}" lasers="32" samples="${samples}" 
+                      min_range="0.5" max_range="150" noise="0.01" min_angle="-${M_PI}" 
+                      max_angle="${M_PI}" vfov_min="-0.349066" vfov_max="0.331613" gpu="${gpu}"/>
+
+    </xacro:macro>
+</robot>

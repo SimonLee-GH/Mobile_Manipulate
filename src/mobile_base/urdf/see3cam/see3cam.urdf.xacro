@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include filename="$(find mobile_base)/urdf/see3cam/camera.gazebo.xacro" />
+    <xacro:macro name="see3cam" params="*origin parent name hz:=15.0 h_fov:=2.61799 format:=R8G8B8">
+
+    <!-- Camera -->
+    <joint name="${name}_frame_joint" type="fixed">
+        <xacro:insert_block name="origin" /> 
+        <parent link="${parent}"/>
+        <child link="${name}_link" />
+    </joint>
+    <link name="${name}_link">
+        <inertial>
+            <mass value="0.05" />
+                <inertia ixx="0.0"  ixy="0.0"  ixz="0.0"
+                         iyy="0.0"  iyz="0.0"  izz="0.0" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0.0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.0145 0.027 0.027"/>
+                <!--
+                <mesh filename="package://gazebo_sensor_collection/meshes/econ/see3cam.stl"
+                      scale="0.001 0.001 0.001" /> 
+                -->
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.0145 0.027 0.027"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <gazebo reference="${name}_link">
+        <material>Gazebo/FlatBlack</material>
+    </gazebo>
+
+    <joint name="${name}_optical_frame_joint" type="fixed">
+        <origin xyz="0.0 0 0" rpy="0 0 0"/>
+        <parent link="${name}_link"/>
+        <child link="${name}_optical_link"/>
+    </joint>
+    <link name="${name}_optical_link"/>
+
+    <!-- extension -->
+    <xacro:gazebo_camera name="${name}_image" reference="${name}_optical_link" hz="${hz}" h_fov="${h_fov}" width="1920" height="1080" format="${format}" frame_id="${name}_link"/>
+    </xacro:macro>
+</robot>

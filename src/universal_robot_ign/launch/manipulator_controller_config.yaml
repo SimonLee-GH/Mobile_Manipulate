@@ -1,0 +1,27 @@
+# manipulator_controller_config.yaml
+joint_position_controller:
+  ros__parameters:
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+    gains:
+      shoulder_pan_joint: {p: 10000, i: 100, d: 500, i_clamp: 200}
+      shoulder_lift_joint: {p: 50000, i: 100, d: 1000, i_clamp: 200}
+      elbow_joint: {p: 50000, i: 100, d: 1000, i_clamp: 200}
+      wrist_1_joint: {p: 100, i: 50, d: 10, i_clamp: 10}
+      wrist_2_joint: {p: 75, i: 10, d: 5, i_clamp: 10}
+      wrist_3_joint: {p: 25, i: 10, d: 0.1, i_clamp: 10}
+
+joint_state_broadcaster:
+  type: joint_state_broadcaster/JointStateBroadcaster
+  joints:
+    - shoulder_pan_joint
+    - shoulder_lift_joint
+    - elbow_joint
+    - wrist_1_joint
+    - wrist_2_joint
+    - wrist_3_joint

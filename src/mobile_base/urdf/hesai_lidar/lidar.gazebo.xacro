@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="use_gpu" value="true" />
+    <xacro:macro name="gazebo_lidar"
+        params="name topic_points hz lasers samples min_range max_range noise min_angle max_angle vfov_min vfov_max gpu">
+
+        <gazebo reference="${name}_link">
+            <xacro:if value="${gpu}">
+                <sensor name="lidar" type="gpu_lidar">
+                    <ignition_frame_id>"${name}_link"</ignition_frame_id>
+                    <topic>scan</topic>
+                    <always_on>true</always_on>
+                    <visualize>true</visualize>
+                    <update_rate>${hz}</update_rate>
+                    <ray>
+                        <scan>
+                            <horizontal>
+                                <samples>${samples}</samples>
+                                <resolution>1.000000</resolution>
+                                <min_angle>${min_angle}</min_angle>
+                                <max_angle>${max_angle}</max_angle>
+                            </horizontal>
+                            <vertical>
+                                <samples>${lasers}</samples>
+                                <resolution>1</resolution>
+                                <min_angle>${vfov_min}</min_angle>
+                                <max_angle>${vfov_max}</max_angle>
+                            </vertical>
+                        </scan>
+                        <range>
+                            <min>${min_range}</min>
+                            <max>${max_range}</max>
+                            <resolution>0.03</resolution>
+                        </range>
+                        <noise>
+                            <type>gaussian</type>
+                            <mean>0.0</mean>
+                            <stddev>0.01</stddev>
+                        </noise>
+                    </ray>
+                </sensor>
+            </xacro:if>
+            <xacro:unless value="${gpu}">
+                <sensor type="ray" name="${name}_sensor">
+                    <ignition_frame_id>"${name}_link"</ignition_frame_id>
+                    <topic>scan</topic>
+                    <always_on>true</always_on>
+                    <visualize>true</visualize>
+                    <update_rate>${hz}</update_rate>
+                    <ray>
+                        <scan>
+                            <horizontal>
+                                <samples>${samples}</samples>
+                                <resolution>1.000000</resolution>
+                                <min_angle>${min_angle}</min_angle>
+                                <max_angle>${max_angle}</max_angle>
+                            </horizontal>
+                            <vertical>
+                                <samples>${lasers}</samples>
+                                <resolution>1</resolution>
+                                <min_angle>${vfov_min}</min_angle>
+                                <max_angle>${vfov_max}</max_angle>
+                            </vertical>
+                        </scan>
+                        <range>
+                            <min>${min_range}</min>
+                            <max>${max_range}</max>
+                            <resolution>0.03</resolution>
+                        </range>
+                        <noise>
+                            <type>gaussian</type>
+                            <mean>0.0</mean>
+                            <stddev>0.01</stddev>
+                        </noise>
+                    </ray>
+                </sensor>
+            </xacro:unless>
+        </gazebo>
+    </xacro:macro>
+</robot>

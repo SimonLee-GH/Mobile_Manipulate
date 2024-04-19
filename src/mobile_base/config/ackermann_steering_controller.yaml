@@ -1,0 +1,79 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100 # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    ackermann_steering_controller:
+      type: ackermann_steering_controller/AckermannSteeringController
+    
+    ur_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+ur_arm_controller:
+  ros__parameters:
+    command_interfaces:
+      - position
+      - velocity
+    state_interfaces:
+      - position
+      - velocity
+      - acceleration
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+
+ackermann_steering_controller:
+  ros__parameters:
+  #Steering
+    reference_timeout: 10.0
+    front_steering: true
+    open_loop: true
+    velocity_rolling_window_size: 10
+    position_feedback: false
+    use_stamped_vel: false
+    base_frame_id : base_link
+    rear_wheels_names: [rear_right_wheel_joint, rear_left_wheel_joint]
+    front_wheels_names: [front_right_steer_joint, front_left_steer_joint]
+
+
+  #Ackermann
+    wheelbase: 0.25          #-axle_offset*2+base_length  -0.075*2+0.4= 0.25 
+    front_wheel_track: 0.62  #axle_offset*2+base_width  0.075*2+0.47= 0.62
+    rear_wheel_track: 0.62
+    front_wheels_radius: 0.1
+    rear_wheels_radius: 0.1
+
+    publish_rate: 50.0
+    odom_frame_id: odom
+    base_frame_id: base_link
+    pose_covariance_diagonal : [0.001, 0.001, 0.0, 0.0, 0.0, 0.01]
+    twist_covariance_diagonal: [0.001, 0.0, 0.0, 0.0, 0.0, 0.01]
+    enable_odom_tf: true
+
+
+    # Velocity and acceleration limits
+    # Whenever a min_* is unspecified, default to -max_*
+    linear.x.has_velocity_limits: true
+    linear.x.has_acceleration_limits: true
+    linear.x.has_jerk_limits: false
+    linear.x.max_velocity: 1.0
+    linear.x.min_velocity: -1.0
+    linear.x.max_acceleration: 1.0
+    linear.x.max_jerk: 0.0
+    linear.x.min_jerk: 0.0
+
+    angular.z.has_velocity_limits: true
+    angular.z.has_acceleration_limits: true
+    angular.z.has_jerk_limits: false
+    angular.z.max_velocity: 1.0
+    angular.z.min_velocity: -1.0
+    angular.z.max_acceleration: 1.0
+    angular.z.min_acceleration: -1.0
+    angular.z.max_jerk: 0.0
+    angular.z.min_jerk: 0.0
